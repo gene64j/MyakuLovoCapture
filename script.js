@@ -3,8 +3,9 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const video = document.getElementById('video');
+const captureBtn = document.getElementById('captureBtn');
 
-// カメラ映像の取得
+// カメラ映像取得
 navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false })
   .then(stream => {
     video.srcObject = stream;
@@ -13,26 +14,34 @@ navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audi
     alert('カメラにアクセスできませんでした: ' + err.message);
   });
 
-// Three.js 初期化
+// Three.jsのセットアップ
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-canvas'), alpha: true, antialias: true });
+const camera = new THREE.PerspectiveCamera(70, window.innerWidth/window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setClearColor(0x000000, 0);
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setClearColor(0x000000, 0); // 背景透明
+renderer.domElement.style.position = 'absolute';
+renderer.domElement.style.top = '0';
+renderer.domElement.style.left = '0';
+renderer.domElement.style.width = '100vw';
+renderer.domElement.style.height = '100vh';
+renderer.domElement.style.zIndex = '1';
+renderer.domElement.style.pointerEvents = 'none'; // 操作は透過
+document.body.appendChild(renderer.domElement);
 
+// ライトとコントロール
+const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1);
+scene.add(light);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 
-const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1);
-scene.add(light);
-
-// モデルの読み込み
 const loader = new GLTFLoader();
 loader.load('model.glb', (gltf) => {
   const model = gltf.scene;
   scene.add(model);
 
-  // 中心・スケーリング調整
+  // モデル位置とカメラ調整
   const box = new THREE.Box3().setFromObject(model);
   const center = box.getCenter(new THREE.Vector3());
   const size = box.getSize(new THREE.Vector3()).length();
@@ -50,28 +59,30 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// 撮影ボタン
-document.getElementById('captureBtn').addEventListener('click', () => {
-  // Three.js の描画を強制（1フレーム更新）
-  renderer.render(scene, camera);
+// 📸 撮影処理
+captureBtn.addEventListener('click', () => {
+  renderer.render(scene, camera); // 最終描画を確定させる
 
-  // Three.js の出力を画像に変換（base64 PNG）
   const modelImage = new Image();
   modelImage.src = renderer.domElement.toDataURL('image/png');
 
   modelImage.onload = () => {
+    const rect = renderer.domElement.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+
     const captureCanvas = document.createElement('canvas');
-    captureCanvas.width = window.innerWidth;
-    captureCanvas.height = window.innerHeight;
+    captureCanvas.width = width;
+    captureCanvas.height = height;
     const ctx = captureCanvas.getContext('2d');
 
-    // video を描画（カメラ映像）
-    ctx.drawImage(video, 0, 0, captureCanvas.width, Math.floor(window.innerHeight * 0.85));
+    // videoを描画
+    ctx.drawImage(video, 0, 0, width, height);
 
-    // Three.js の画像を合成
-    ctx.drawImage(modelImage, 0, 0, captureCanvas.width, captureCanvas.height);
+    // Three.jsの描画を合成
+    ctx.drawImage(modelImage, 0, 0, width, height);
 
-    // JPEG で保存
+    // 画像として保存（JPEG）
     const dataURL = captureCanvas.toDataURL('image/jpeg', 0.95);
     const link = document.createElement('a');
     link.href = dataURL;
@@ -80,7 +91,7 @@ document.getElementById('captureBtn').addEventListener('click', () => {
   };
 });
 
-// 描画ループ
+// アニメーションループ
 function animate() {
   requestAnimationFrame(animate);
   controls.update();
