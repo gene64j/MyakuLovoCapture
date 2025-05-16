@@ -52,22 +52,27 @@ window.addEventListener('resize', () => {
 
 // 撮影ボタン
 document.getElementById('captureBtn').addEventListener('click', () => {
+  // まず、Three.jsの描画を1フレーム強制
+  renderer.render(scene, camera);
+
+  // 合成用キャンバス作成
   const captureCanvas = document.createElement('canvas');
   captureCanvas.width = window.innerWidth;
   captureCanvas.height = window.innerHeight;
   const ctx = captureCanvas.getContext('2d');
 
-  // videoを描画
+  // videoを描画（カメラ映像）
   ctx.drawImage(video, 0, 0, captureCanvas.width, Math.floor(window.innerHeight * 0.85));
 
-  // WebGL canvasを描画
+  // Three.jsのcanvasを合成（3Dモデル）
   ctx.drawImage(renderer.domElement, 0, 0, captureCanvas.width, captureCanvas.height);
 
-  // ダウンロード
-  const dataURL = captureCanvas.toDataURL('image/png');
+  // JPEG形式で保存
+  const dataURL = captureCanvas.toDataURL('image/jpeg', 0.95); // 圧縮率95%
+
   const link = document.createElement('a');
   link.href = dataURL;
-  link.download = 'capture.png';
+  link.download = 'capture.jpg';
   link.click();
 });
 
