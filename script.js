@@ -52,28 +52,32 @@ window.addEventListener('resize', () => {
 
 // 撮影ボタン
 document.getElementById('captureBtn').addEventListener('click', () => {
-  // まず、Three.jsの描画を1フレーム強制
+  // Three.js の描画を強制（1フレーム更新）
   renderer.render(scene, camera);
 
-  // 合成用キャンバス作成
-  const captureCanvas = document.createElement('canvas');
-  captureCanvas.width = window.innerWidth;
-  captureCanvas.height = window.innerHeight;
-  const ctx = captureCanvas.getContext('2d');
+  // Three.js の出力を画像に変換（base64 PNG）
+  const modelImage = new Image();
+  modelImage.src = renderer.domElement.toDataURL('image/png');
 
-  // videoを描画（カメラ映像）
-  ctx.drawImage(video, 0, 0, captureCanvas.width, Math.floor(window.innerHeight * 0.85));
+  modelImage.onload = () => {
+    const captureCanvas = document.createElement('canvas');
+    captureCanvas.width = window.innerWidth;
+    captureCanvas.height = window.innerHeight;
+    const ctx = captureCanvas.getContext('2d');
 
-  // Three.jsのcanvasを合成（3Dモデル）
-  ctx.drawImage(renderer.domElement, 0, 0, captureCanvas.width, captureCanvas.height);
+    // video を描画（カメラ映像）
+    ctx.drawImage(video, 0, 0, captureCanvas.width, Math.floor(window.innerHeight * 0.85));
 
-  // JPEG形式で保存
-  const dataURL = captureCanvas.toDataURL('image/jpeg', 0.95); // 圧縮率95%
+    // Three.js の画像を合成
+    ctx.drawImage(modelImage, 0, 0, captureCanvas.width, captureCanvas.height);
 
-  const link = document.createElement('a');
-  link.href = dataURL;
-  link.download = 'capture.jpg';
-  link.click();
+    // JPEG で保存
+    const dataURL = captureCanvas.toDataURL('image/jpeg', 0.95);
+    const link = document.createElement('a');
+    link.href = dataURL;
+    link.download = 'capture.jpg';
+    link.click();
+  };
 });
 
 // 描画ループ
