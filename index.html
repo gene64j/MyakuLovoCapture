@@ -2,11 +2,8 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>みゃくらぼキャプチャ</title>
   <link rel="stylesheet" href="style.css" />
-
-  <!-- importmap for three.js -->
   <script type="importmap">
     {
       "imports": {
@@ -17,13 +14,9 @@
   </script>
 </head>
 <body>
-  <div id="container">
-    <video id="video" autoplay muted playsinline></video>
-    <canvas id="three-canvas"></canvas>
-    <div id="controls">
-      <button id="captureBtn" aria-label="撮影"></button>
-    </div>
-  </div>
+  <video id="video" autoplay muted playsinline></video>
+  <button id="captureBtn" title="撮影"></button>
+
   <script type="module" src="script.js"></script>
 </body>
 </html>
