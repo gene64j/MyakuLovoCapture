@@ -1,3 +1,4 @@
+/* bodyは余白なし、overflow隠し */
 body {
   margin: 0;
   overflow: hidden;
@@ -11,9 +12,9 @@ video {
   top: 0;
   left: 0;
   width: 100vw;
-  height: auto;          /* 高さはautoにして縦横比維持 */
+  height: auto;
   max-height: 100vh;
-  object-fit: contain;   /* 画面内に収めて縦横比キープ */
+  object-fit: contain;
   background-color: black;
   z-index: 0;
 }
@@ -22,9 +23,9 @@ canvas {
   position: absolute;
   top: 0;
   left: 0;
-  /* canvasの幅高さはJS側で設定するためCSSでの固定はやめる */
+  pointer-events: auto; /* 操作可能 */
   z-index: 1;
-  pointer-events: none; /* タッチ/マウスイベントは透過 */
+  user-select: none;
 }
 
 #captureBtn {
@@ -36,12 +37,9 @@ canvas {
   border-radius: 50%;
   border: none;
   background-color: rgba(255, 255, 255, 0.8);
-  z-index: 10;
   cursor: pointer;
-  /* bottomはJS側で動的に調整 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
+  z-index: 10;
   user-select: none;
+  /* bottomはscript.jsで調整 */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }
