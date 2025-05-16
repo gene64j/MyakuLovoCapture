@@ -40,13 +40,15 @@ canvas {
 }
 
 #captureBtn {
-  padding: 14px 20px;
-  font-size: 18px;
-  border: none;
-  border-radius: 50%;
+  position: absolute;
+  bottom: 80px; /* ←以前より上に */
+  left: 50%;
+  transform: translateX(-50%);
   width: 64px;
   height: 64px;
   background-color: white;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
-  z-index: 3;
+  border: none;
+  border-radius: 50%;
+  z-index: 10;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
