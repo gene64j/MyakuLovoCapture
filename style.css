@@ -1,19 +1,9 @@
 body {
   margin: 0;
-  padding: 0;
   overflow: hidden;
-  font-family: sans-serif;
-  background-color: black;
-}
-
-#container {
   position: relative;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
+  touch-action: none;
+  background-color: black;
 }
 
 video {
@@ -21,9 +11,10 @@ video {
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
-  object-fit: contain; /* cover → contain に変更 */
-  background-color: black; /* 黒枠が見えてもOKに */
+  height: auto;          /* 高さはautoにして縦横比維持 */
+  max-height: 100vh;
+  object-fit: contain;   /* 画面内に収めて縦横比キープ */
+  background-color: black;
   z-index: 0;
 }
 
@@ -31,34 +22,26 @@ canvas {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 85vh !important;
-  object-fit: cover;
+  /* canvasの幅高さはJS側で設定するためCSSでの固定はやめる */
   z-index: 1;
-}
-
-#controls {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 15vh;
-  background-color: black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2;
+  pointer-events: none; /* タッチ/マウスイベントは透過 */
 }
 
 #captureBtn {
   position: absolute;
-  bottom: 80px; /* ←以前より上に */
   left: 50%;
   transform: translateX(-50%);
-  width: 64px;
-  height: 64px;
-  background-color: white;
-  border: none;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.8);
   z-index: 10;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  cursor: pointer;
+  /* bottomはJS側で動的に調整 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  user-select: none;
 }
