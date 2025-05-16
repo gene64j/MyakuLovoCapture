@@ -2,8 +2,9 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>みゃくらぼキャプチャ</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
   <script type="importmap">
     {
       "imports": {
@@ -14,9 +15,13 @@
   </script>
 </head>
 <body>
-  <video id="video" autoplay muted playsinline></video>
-  <button id="captureBtn" title="撮影"></button>
-
+  <div id="container">
+    <video id="video" autoplay muted playsinline></video>
+    <canvas id="three-canvas"></canvas>
+    <div id="footer">
+      <button id="captureBtn"></button>
+    </div>
+  </div>
   <script type="module" src="script.js"></script>
 </body>
 </html>
