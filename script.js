@@ -61,28 +61,29 @@ window.addEventListener('resize', () => {
 
 // 📸 撮影処理
 captureBtn.addEventListener('click', () => {
-  renderer.render(scene, camera); // 最終描画を確定させる
+  renderer.render(scene, camera); // 直近描画を確定
 
   const modelImage = new Image();
   modelImage.src = renderer.domElement.toDataURL('image/png');
 
   modelImage.onload = () => {
-    const rect = renderer.domElement.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
+    // videoの実際の映像サイズ（ピクセル）
+    const vidWidth = video.videoWidth;
+    const vidHeight = video.videoHeight;
 
+    // captureCanvasはvideoの実映像サイズで作成
     const captureCanvas = document.createElement('canvas');
-    captureCanvas.width = width;
-    captureCanvas.height = height;
+    captureCanvas.width = vidWidth;
+    captureCanvas.height = vidHeight;
     const ctx = captureCanvas.getContext('2d');
 
-    // videoを描画
-    ctx.drawImage(video, 0, 0, width, height);
+    // videoの実映像をキャンバスに描画
+    ctx.drawImage(video, 0, 0, vidWidth, vidHeight);
 
-    // Three.jsの描画を合成
-    ctx.drawImage(modelImage, 0, 0, width, height);
+    // modelImageをvideo映像サイズに合わせて描画
+    // modelImageはrenderer.domElementのサイズと異なるかもしれないため注意
+    ctx.drawImage(modelImage, 0, 0, vidWidth, vidHeight);
 
-    // 画像として保存（JPEG）
     const dataURL = captureCanvas.toDataURL('image/jpeg', 0.95);
     const link = document.createElement('a');
     link.href = dataURL;
