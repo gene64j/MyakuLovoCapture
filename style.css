@@ -16,7 +16,17 @@ body {
   align-items: center;
 }
 
-video,
+video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: contain; /* cover → contain に変更 */
+  background-color: black; /* 黒枠が見えてもOKに */
+  z-index: 0;
+}
+
 canvas {
   position: absolute;
   top: 0;
