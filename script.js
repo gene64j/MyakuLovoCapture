@@ -91,34 +91,3 @@ document.addEventListener('dblclick', (e) => {
   e.preventDefault();
   capture();
 });
-
-// タッチ長押しで撮影
-let longPressTimer = null;
-document.addEventListener('touchstart', (e) => {
-  longPressTimer = setTimeout(() => {
-    capture(); // 500ms経過後、まだ押されていれば撮影
-    longPressTimer = null;
-  }, 500);
-});
-
-document.addEventListener('touchend', (e) => {
-  if (longPressTimer !== null) {
-    clearTimeout(longPressTimer); // 指を離したのでキャンセル
-    longPressTimer = null;
-  }
-});
-
-// PC用：マウス長押し対応
-document.addEventListener('mousedown', (e) => {
-  longPressTimer = setTimeout(() => {
-    capture();
-    longPressTimer = null;
-  }, 500);
-});
-
-document.addEventListener('mouseup', (e) => {
-  if (longPressTimer !== null) {
-    clearTimeout(longPressTimer);
-    longPressTimer = null;
-  }
-});
