@@ -61,8 +61,8 @@ animate();
 
 // 📸 撮影処理（video + 3Dを合成して保存）
 function capture() {
-  const width = renderer.domElement.clientWidth;
-  const height = renderer.domElement.clientHeight;
+  const width = renderer.domElement.width;
+  const height = renderer.domElement.height;
 
   const captureCanvas = document.createElement('canvas');
   captureCanvas.width = width;
