@@ -20,7 +20,7 @@ const camera = new THREE.PerspectiveCamera(70, window.innerWidth/window.innerHei
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 
-const light = new THREE.HemisphereLight(0xffffff, 0x444444, 3);
+const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1);
 scene.add(light);
 
 let model;
