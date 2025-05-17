@@ -20,7 +20,7 @@ const camera = new THREE.PerspectiveCamera(70, window.innerWidth/window.innerHei
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 
-const light = new THREE.HemisphereLight(0xffffff, 0x444444, 33);
+const light = new THREE.HemisphereLight(0xffffff, 0x444444, 3);
 scene.add(light);
 
 let model;
@@ -59,23 +59,66 @@ function animate() {
 }
 animate();
 
-// 撮影処理
-document.getElementById('captureBtn').addEventListener('click', () => {
+// 📸 撮影処理（video + 3Dを合成して保存）
+function capture() {
   const captureCanvas = document.createElement('canvas');
   captureCanvas.width = renderer.domElement.width;
   captureCanvas.height = renderer.domElement.height;
   const ctx = captureCanvas.getContext('2d');
 
-  // videoを合成
   ctx.drawImage(video, 0, 0, captureCanvas.width, captureCanvas.height);
-
-  // モデル（WebGL）を合成
   ctx.drawImage(renderer.domElement, 0, 0, captureCanvas.width, captureCanvas.height);
 
-  // JPGで保存
   const dataURL = captureCanvas.toDataURL('image/jpeg', 0.95);
   const link = document.createElement('a');
   link.href = dataURL;
   link.download = 'capture.jpg';
   link.click();
+}
+
+// 📱 ダブルタップ or PCダブルクリックで撮影
+let lastTap = 0;
+document.addEventListener('touchstart', (e) => {
+  const now = Date.now();
+  if (now - lastTap < 300) {
+    e.preventDefault();
+    capture();
+  }
+  lastTap = now;
+});
+
+document.addEventListener('dblclick', (e) => {
+  e.preventDefault();
+  capture();
+});
+
+// タッチ長押しで撮影
+let longPressTimer = null;
+document.addEventListener('touchstart', (e) => {
+  longPressTimer = setTimeout(() => {
+    capture(); // 500ms経過後、まだ押されていれば撮影
+    longPressTimer = null;
+  }, 500);
+});
+
+document.addEventListener('touchend', (e) => {
+  if (longPressTimer !== null) {
+    clearTimeout(longPressTimer); // 指を離したのでキャンセル
+    longPressTimer = null;
+  }
+});
+
+// PC用：マウス長押し対応
+document.addEventListener('mousedown', (e) => {
+  longPressTimer = setTimeout(() => {
+    capture();
+    longPressTimer = null;
+  }, 500);
+});
+
+document.addEventListener('mouseup', (e) => {
+  if (longPressTimer !== null) {
+    clearTimeout(longPressTimer);
+    longPressTimer = null;
+  }
 });
