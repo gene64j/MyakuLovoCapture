@@ -20,7 +20,7 @@ const camera = new THREE.PerspectiveCamera(70, window.innerWidth/window.innerHei
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 
-const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1);
+const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.5);
 scene.add(light);
 
 let model;
@@ -61,18 +61,20 @@ animate();
 
 // 📸 撮影処理（video + 3Dを合成して保存）
 function capture() {
+    const vidWidth = video.videoWidth;
+    const vidHeight = video.videoHeight;
   const captureCanvas = document.createElement('canvas');
-  captureCanvas.width = renderer.domElement.width;
-  captureCanvas.height = renderer.domElement.height;
+  captureCanvas.width = vidWidth;
+  captureCanvas.height = vidHeight;
   const ctx = captureCanvas.getContext('2d');
 
-  ctx.drawImage(video, 0, 0, captureCanvas.width, captureCanvas.height);
-  ctx.drawImage(renderer.domElement, 0, 0, captureCanvas.width, captureCanvas.height);
+  ctx.drawImage(video, 0, 0, vidWidth, vidHeight);
+  ctx.drawImage(renderer.domElement, 0, 0, vidWidth, vidHeight);
 
   const dataURL = captureCanvas.toDataURL('image/jpeg', 0.95);
   const link = document.createElement('a');
   link.href = dataURL;
-  link.download = 'capture.jpg';
+  link.download = 'myakulovot.jpg';
   link.click();
 }
 
