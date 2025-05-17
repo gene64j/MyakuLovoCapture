@@ -73,6 +73,7 @@ function capture() {
   ctx.drawImage(video, 0, 0, width, height);
 
   // WebGL canvasの内容を同じサイズで合成
+  renderer.render(scene, camera); // ← これ重要
   ctx.drawImage(renderer.domElement, 0, 0, width, height);
 
   // 保存処理（JPEG）
