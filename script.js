@@ -61,22 +61,28 @@ animate();
 
 // 📸 撮影処理（video + 3Dを合成して保存）
 function capture() {
-    const vidWidth = video.videoWidth;
-    const vidHeight = video.videoHeight;
+  const width = renderer.domElement.clientWidth;
+  const height = renderer.domElement.clientHeight;
+
   const captureCanvas = document.createElement('canvas');
-  captureCanvas.width = vidWidth;
-  captureCanvas.height = vidHeight;
+  captureCanvas.width = width;
+  captureCanvas.height = height;
   const ctx = captureCanvas.getContext('2d');
 
-  ctx.drawImage(video, 0, 0, vidWidth, vidHeight);
-  ctx.drawImage(renderer.domElement, 0, 0, vidWidth, vidHeight);
+  // videoを画面に表示されているサイズで描画
+  ctx.drawImage(video, 0, 0, width, height);
 
+  // WebGL canvasの内容を同じサイズで合成
+  ctx.drawImage(renderer.domElement, 0, 0, width, height);
+
+  // 保存処理（JPEG）
   const dataURL = captureCanvas.toDataURL('image/jpeg', 0.95);
   const link = document.createElement('a');
   link.href = dataURL;
-  link.download = 'myakulovot.jpg';
+  link.download = 'capture.jpg';
   link.click();
 }
+
 
 // 📱 ダブルタップ or PCダブルクリックで撮影
 let lastTap = 0;
