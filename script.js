@@ -4,6 +4,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const video = document.getElementById('video');
 const canvas = document.getElementById('three-canvas');
+video.width = window.innerWidth;
+video.height = window.innerHeight;
 
 // カメラ取得
 navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false })
@@ -45,6 +47,7 @@ function resize() {
   const width = window.innerWidth;
   const height = window.innerHeight;
   renderer.setSize(width, height);
+  renderer.setPixelRatio(window.devicePixelRatio); // 画質向上
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
 }
