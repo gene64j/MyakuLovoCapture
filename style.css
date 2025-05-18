@@ -21,7 +21,7 @@ video {
   position: absolute;
   width: 100%;
   height: auto;
-  object-fit: contain;
+  object-fit: cover;
   z-index: 0;
 }
 
