@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>カメラ表示＆スクリーンキャプチャ</title>
+  <title>正確なカメラ画像キャプチャ</title>
   <style>
     html, body {
       margin: 0;
@@ -13,14 +13,13 @@
       background: black;
     }
 
-    video, canvas, img {
+    video, img {
       position: absolute;
       top: 0;
       left: 0;
+      object-fit: cover;
       width: 100%;
       height: 100%;
-      object-fit: cover;
-      display: block;
     }
 
     #info {
@@ -89,41 +88,59 @@
       const currentTime = new Date().getTime();
       const tapLength = currentTime - lastTap;
       if (tapLength < 300 && tapLength > 0) {
-        captureScreenshot();
+        captureVisibleCameraView();
       }
       lastTap = currentTime;
     });
 
     document.addEventListener('dblclick', function(e) {
       e.preventDefault();
-      captureScreenshot();
+      captureVisibleCameraView();
     });
 
-    function captureScreenshot() {
+    function captureVisibleCameraView() {
       const screenWidth = window.innerWidth;
       const screenHeight = window.innerHeight;
+      const screenAspect = screenWidth / screenHeight;
+      const videoAspect = videoWidth / videoHeight;
 
+      // canvasサイズ = 画面サイズ
       canvas.width = screenWidth;
       canvas.height = screenHeight;
-
       const ctx = canvas.getContext('2d');
-      ctx.drawImage(video, 0, 0, screenWidth, screenHeight);
 
-      // オーバーレイ情報
+      // 描画元の計算（中央を切り抜く）
+      let sx, sy, sWidth, sHeight;
+
+      if (screenAspect > videoAspect) {
+        // 横長画面 → 映像の上下が切れる
+        sWidth = videoWidth;
+        sHeight = videoWidth / screenAspect;
+        sx = 0;
+        sy = (videoHeight - sHeight) / 2;
+      } else {
+        // 縦長画面 → 映像の左右が切れる
+        sHeight = videoHeight;
+        sWidth = videoHeight * screenAspect;
+        sy = 0;
+        sx = (videoWidth - sWidth) / 2;
+      }
+
+      ctx.drawImage(video, sx, sy, sWidth, sHeight, 0, 0, screenWidth, screenHeight);
+
+      // 情報オーバーレイ
       ctx.fillStyle = "rgba(0,0,0,0.5)";
-      ctx.fillRect(10, 10, 280, 80);
+      ctx.fillRect(10, 10, 300, 80);
       ctx.fillStyle = "white";
       ctx.font = "16px sans-serif";
       ctx.fillText(`📷 カメラ: ${videoWidth} x ${videoHeight}`, 20, 35);
       ctx.fillText(`🖥️ 画面: ${screenWidth} x ${screenHeight}`, 20, 55);
       ctx.fillText(`🖼️ 画像: ${canvas.width} x ${canvas.height}`, 20, 75);
 
-      // 撮影画像表示
+      // 表示
       const dataURL = canvas.toDataURL("image/jpeg");
       snapshot.src = dataURL;
       snapshot.style.display = 'block';
-
-      // 一定時間後に非表示にするならここにタイマーを書く
     }
 
     window.addEventListener('resize', updateInfo);
