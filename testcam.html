@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>カメラアプリ with ボタン群</title>
+  <title>カメラアプリ</title>
   <style>
     html, body {
       margin: 0;
@@ -56,6 +56,9 @@
       border: 4px solid white;
       background-color: rgba(255,255,255,0.2);
       cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .control-button:active {
@@ -74,10 +77,7 @@
     }
 
     #download-btn, #delete-btn {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: rgba(255,255,255,0.2);
+      display: none; /* 最初は非表示 */
     }
   </style>
 </head>
@@ -170,12 +170,15 @@
       snapshot.style.display = 'block';
       video.style.display = 'none';
       lastImageURL = dataURL;
+
+      // ⬇️🗑️ボタンを表示
+      downloadButton.style.display = 'flex';
+      deleteButton.style.display = 'flex';
+      captureButton.style.display = 'none';
     }
 
-    // 撮影
     captureButton.addEventListener('click', captureVisibleCameraView);
 
-    // ダウンロード
     downloadButton.addEventListener('click', () => {
       if (lastImageURL) {
         const a = document.createElement('a');
@@ -185,11 +188,14 @@
       }
     });
 
-    // ゴミ箱 → 戻す
     deleteButton.addEventListener('click', () => {
       snapshot.style.display = 'none';
       video.style.display = 'block';
       lastImageURL = null;
+      // ボタンの状態を元に戻す
+      downloadButton.style.display = 'none';
+      deleteButton.style.display = 'none';
+      captureButton.style.display = 'flex';
     });
 
     window.addEventListener('resize', updateInfo);
