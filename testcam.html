@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>正確なカメラ画像キャプチャ</title>
+  <title>カメラ撮影アプリ</title>
   <style>
     html, body {
       margin: 0;
@@ -36,6 +36,24 @@
       white-space: pre-line;
     }
 
+    #capture-button {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70px;
+      height: 70px;
+      border: 5px solid white;
+      border-radius: 50%;
+      background-color: rgba(255,255,255,0.2);
+      z-index: 10;
+      cursor: pointer;
+    }
+
+    #capture-button:active {
+      background-color: rgba(255,255,255,0.5);
+    }
+
     #snapshot {
       display: none;
       z-index: 5;
@@ -45,12 +63,14 @@
 <body>
   <video id="camera" autoplay playsinline></video>
   <div id="info">Loading...</div>
+  <div id="capture-button"></div>
   <canvas id="capture" style="display: none;"></canvas>
   <img id="snapshot" />
 
   <script>
     const video = document.getElementById('camera');
     const info = document.getElementById('info');
+    const button = document.getElementById('capture-button');
     const canvas = document.getElementById('capture');
     const snapshot = document.getElementById('snapshot');
 
@@ -82,44 +102,24 @@
         `📷 カメラ: ${videoWidth} x ${videoHeight}\n🖥️ 画面: ${screenWidth} x ${screenHeight}`;
     }
 
-    // ダブルタップ検出
-    let lastTap = 0;
-    document.addEventListener('touchend', function(e) {
-      const currentTime = new Date().getTime();
-      const tapLength = currentTime - lastTap;
-      if (tapLength < 300 && tapLength > 0) {
-        captureVisibleCameraView();
-      }
-      lastTap = currentTime;
-    });
-
-    document.addEventListener('dblclick', function(e) {
-      e.preventDefault();
-      captureVisibleCameraView();
-    });
-
     function captureVisibleCameraView() {
       const screenWidth = window.innerWidth;
       const screenHeight = window.innerHeight;
       const screenAspect = screenWidth / screenHeight;
       const videoAspect = videoWidth / videoHeight;
 
-      // canvasサイズ = 画面サイズ
       canvas.width = screenWidth;
       canvas.height = screenHeight;
       const ctx = canvas.getContext('2d');
 
-      // 描画元の計算（中央を切り抜く）
+      // 中央クロップを計算して描画
       let sx, sy, sWidth, sHeight;
-
       if (screenAspect > videoAspect) {
-        // 横長画面 → 映像の上下が切れる
         sWidth = videoWidth;
         sHeight = videoWidth / screenAspect;
         sx = 0;
         sy = (videoHeight - sHeight) / 2;
       } else {
-        // 縦長画面 → 映像の左右が切れる
         sHeight = videoHeight;
         sWidth = videoHeight * screenAspect;
         sy = 0;
@@ -137,12 +137,13 @@
       ctx.fillText(`🖥️ 画面: ${screenWidth} x ${screenHeight}`, 20, 55);
       ctx.fillText(`🖼️ 画像: ${canvas.width} x ${canvas.height}`, 20, 75);
 
-      // 表示
+      // 撮影画像を表示
       const dataURL = canvas.toDataURL("image/jpeg");
       snapshot.src = dataURL;
       snapshot.style.display = 'block';
     }
 
+    button.addEventListener('click', captureVisibleCameraView);
     window.addEventListener('resize', updateInfo);
     startCamera();
   </script>
