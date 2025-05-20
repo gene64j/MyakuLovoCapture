@@ -111,6 +111,8 @@ function capture() {
 
   // WebGL canvasの内容を同じサイズで合成
   renderer.render(scene, camera); // ← これ重要
+  const dbgwidth = renderer.domElement.width;
+  const dbgheight = renderer.domElement.height;
   ctx.drawImage(renderer.domElement, 0, 0, window.innerWidth, window.innerHeight);
 
         // 情報オーバーレイ
@@ -120,8 +122,8 @@ function capture() {
       ctx.font = "16px sans-serif";
       ctx.fillText(`📷 カメラ: ${videoWidth} x ${videoHeight}`, 20, 35);
       ctx.fillText(`🖥️ 画面: ${screenWidth} x ${screenHeight}`, 20, 55);
-      let v = renderer.getSize();
-      ctx.fillText(`🖼️ 画面: ${v.width} x ${v.height}`, 20, 75);
+      ctx.fillText(`🖼️ 画面: ${dbgwidth} x ${dbgheight}`, 20, 75);
+      console.log(renderer);
       //ctx.fillText(`🖼️ 画像: ${canvas.width} x ${canvas.height}`, 20, 75);
 
   // 保存処理（JPEG）
