@@ -64,7 +64,7 @@ function resize() {
   const width = window.innerWidth;
   const height = window.innerHeight;
   renderer.setSize(width, height);
-  //renderer.setPixelRatio(window.devicePixelRatio); // 画質向上
+  renderer.setPixelRatio(window.devicePixelRatio); // 画質向上
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
 }
@@ -109,7 +109,7 @@ function capture() {
 
   // WebGL canvasの内容を同じサイズで合成
   renderer.render(scene, camera); // ← これ重要
-  ctx.drawImage(renderer.domElement, sx, sy, sWidth, sHeight, 0, 0, screenWidth, screenHeight);
+  ctx.drawImage(renderer.domElement, 0, 0, screenWidth, screenHeight);
 
   // 保存処理（JPEG）
   const dataURL = captureCanvas.toDataURL('image/jpeg', 0.95);
