@@ -120,7 +120,9 @@ function capture() {
       ctx.font = "16px sans-serif";
       ctx.fillText(`📷 カメラ: ${videoWidth} x ${videoHeight}`, 20, 35);
       ctx.fillText(`🖥️ 画面: ${screenWidth} x ${screenHeight}`, 20, 55);
-      ctx.fillText(`🖼️ 画像: ${canvas.width} x ${canvas.height}`, 20, 75);
+      let v = renderer.getSize();
+      ctx.fillText(`🖼️ 画面: ${v.x} x ${v.y}`, 20, 75);
+      //ctx.fillText(`🖼️ 画像: ${canvas.width} x ${canvas.height}`, 20, 75);
 
   // 保存処理（JPEG）
   const dataURL = captureCanvas.toDataURL('image/jpeg', 0.95);
