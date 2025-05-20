@@ -81,8 +81,8 @@ animate();
 
 // 📸 撮影処理（video + 3Dを合成して保存）
 function capture() {
-  const width = video.videoWidth;
-  const height = video.videoHeight;
+
+
   const screenWidth = window.innerWidth;
   const screenHeight = window.innerHeight;
   const screenAspect = screenWidth / screenHeight;
@@ -111,7 +111,7 @@ function capture() {
 
   // WebGL canvasの内容を同じサイズで合成
   renderer.render(scene, camera); // ← これ重要
-  ctx.drawImage(renderer.domElement, 0, 0, screenWidth, screenHeight);
+  ctx.drawImage(renderer.domElement, 0, 0, window.innerWidth, window.innerHeight);
 
   // 保存処理（JPEG）
   const dataURL = captureCanvas.toDataURL('image/jpeg', 0.95);
