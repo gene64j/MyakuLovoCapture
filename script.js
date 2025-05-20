@@ -121,7 +121,7 @@ function capture() {
       ctx.fillText(`📷 カメラ: ${videoWidth} x ${videoHeight}`, 20, 35);
       ctx.fillText(`🖥️ 画面: ${screenWidth} x ${screenHeight}`, 20, 55);
       let v = renderer.getSize();
-      ctx.fillText(`🖼️ 画面: ${v.x} x ${v.y}`, 20, 75);
+      ctx.fillText(`🖼️ 画面: ${v.width} x ${v.height}`, 20, 75);
       //ctx.fillText(`🖼️ 画像: ${canvas.width} x ${canvas.height}`, 20, 75);
 
   // 保存処理（JPEG）
