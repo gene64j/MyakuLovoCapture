@@ -64,7 +64,7 @@ function resize() {
   const width = window.innerWidth;
   const height = window.innerHeight;
   renderer.setSize(width, height);
-  renderer.setPixelRatio(window.devicePixelRatio); // 画質向上
+  //renderer.setPixelRatio(window.devicePixelRatio); // 画質向上
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
 }
@@ -81,8 +81,6 @@ animate();
 
 // 📸 撮影処理（video + 3Dを合成して保存）
 function capture() {
-
-
   const screenWidth = window.innerWidth;
   const screenHeight = window.innerHeight;
   const screenAspect = screenWidth / screenHeight;
