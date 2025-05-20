@@ -18,8 +18,12 @@
   <div id="container">
     <video id="video" autoplay muted playsinline></video>
     <canvas id="three-canvas"></canvas>
-    <div id="footer">
-      <button id="captureBtn"></button>
+    <img id="snapshot" />
+
+    <div class="button-row">
+      <div id="download-btn" class="control-button"><span class="icon">⬇️</span></div>
+      <div id="capture-button" class="control-button"></div>
+      <div id="delete-btn" class="control-button"><span class="icon">🗑️</span></div>
     </div>
   </div>
   <script type="module" src="script.js"></script>

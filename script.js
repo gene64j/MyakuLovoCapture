@@ -4,22 +4,33 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const video = document.getElementById('video');
 const canvas = document.getElementById('three-canvas');
+const snapshot = document.getElementById('snapshot');
+const captureButton = document.getElementById('capture-button');
+const downloadButton = document.getElementById('download-btn');
+const deleteButton = document.getElementById('delete-btn');
+
 video.width = window.innerWidth;
 video.height = window.innerHeight;
 let videoWidth = 0, videoHeight = 0;
+let lastImageURL = null;
 
 // カメラ取得
-navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false })
-  .then(stream => {
+async function startCamera() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "environment" },
+      audio: false
+    });
     video.srcObject = stream;
-  }).catch(err => {
-    alert('カメラにアクセスできません: ' + err.message);
-  });
 
-video.onloadedmetadata = () => {
-  videoWidth = video.videoWidth;
-  videoHeight = video.videoHeight;
-};
+    video.onloadedmetadata = () => {
+      videoWidth = video.videoWidth;
+      videoHeight = video.videoHeight;
+    };
+  } catch (e) {
+    console.error("カメラ起動エラー:", e);
+  }
+}
 
 // Three.js初期化
 const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
@@ -100,29 +111,42 @@ function capture() {
 
   // WebGL canvasの内容を同じサイズで合成
   renderer.render(scene, camera); // ← これ重要
-  ctx.drawImage(renderer.domElement, 0, 0, width, height);
+  ctx.drawImage(renderer.domElement, 0, 0, screenWidth, screenHeight);
 
   // 保存処理（JPEG）
   const dataURL = captureCanvas.toDataURL('image/jpeg', 0.95);
-  const link = document.createElement('a');
-  link.href = dataURL;
-  link.download = 'capture.jpg';
-  link.click();
+  snapshot.src = dataURL;
+  snapshot.style.display = 'block';
+  video.style.display = 'none';
+  lastImageURL = dataURL;
+
+  downloadButton.style.display = 'flex';
+  deleteButton.style.display = 'flex';
+  captureButton.style.display = 'none';
 }
 
+captureButton.addEventListener('click', capture);
 
-// 📱 ダブルタップ or PCダブルクリックで撮影
-let lastTap = 0;
-document.addEventListener('touchstart', (e) => {
-  const now = Date.now();
-  if (now - lastTap < 300) {
-    e.preventDefault();
-    capture();
+function resetControls() {
+  snapshot.style.display = 'none';
+  video.style.display = 'block';
+  lastImageURL = null;
+  // buttons
+  downloadButton.style.display = 'none';
+  deleteButton.style.display = 'none';
+  captureButton.style.display = 'flex';
+}
+
+downloadButton.addEventListener('click', () => {
+  if (lastImageURL) {
+    const link = document.createElement('a');
+    link.href = lastImageURL;
+    link.download = 'capture.jpg';
+    link.click();
   }
-  lastTap = now;
+  resetControls();
 });
 
-document.addEventListener('dblclick', (e) => {
-  e.preventDefault();
-  capture();
-});
+deleteButton.addEventListener('click', resetControls);
+
+startCamera();
