@@ -6,6 +6,7 @@ const video = document.getElementById('video');
 const canvas = document.getElementById('three-canvas');
 video.width = window.innerWidth;
 video.height = window.innerHeight;
+let videoWidth = 0, videoHeight = 0;
 
 // カメラ取得
 navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false })
@@ -14,6 +15,11 @@ navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audi
   }).catch(err => {
     alert('カメラにアクセスできません: ' + err.message);
   });
+
+video.onloadedmetadata = () => {
+  videoWidth = video.videoWidth;
+  videoHeight = video.videoHeight;
+};
 
 // Three.js初期化
 const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
