@@ -109,20 +109,7 @@ function capture() {
 
   // WebGL canvasの内容を同じサイズで合成
   renderer.render(scene, camera); // ← これ重要
-  const dbgwidth = renderer.domElement.width;
-  const dbgheight = renderer.domElement.height;
-  ctx.drawImage(renderer.domElement, 0, 0, window.innerWidth, window.innerHeight);
-
-        // 情報オーバーレイ
-      ctx.fillStyle = "rgba(0,0,0,0.5)";
-      ctx.fillRect(10, 10, 300, 80);
-      ctx.fillStyle = "white";
-      ctx.font = "16px sans-serif";
-      ctx.fillText(`📷 カメラ: ${videoWidth} x ${videoHeight}`, 20, 35);
-      ctx.fillText(`🖥️ 画面: ${screenWidth} x ${screenHeight}`, 20, 55);
-      ctx.fillText(`🖼️ 画面: ${dbgwidth} x ${dbgheight}`, 20, 75);
-      console.log(renderer);
-      //ctx.fillText(`🖼️ 画像: ${canvas.width} x ${canvas.height}`, 20, 75);
+  ctx.drawImage(renderer.domElement, sx, sy, sWidth, sHeight, 0, 0, screenWidth, screenHeight);
 
   // 保存処理（JPEG）
   const dataURL = captureCanvas.toDataURL('image/jpeg', 0.95);
