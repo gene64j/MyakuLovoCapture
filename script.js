@@ -66,14 +66,31 @@ animate();
 function capture() {
   const width = video.videoWidth;
   const height = video.videoHeight;
+  const screenWidth = window.innerWidth;
+  const screenHeight = window.innerHeight;
+  const screenAspect = screenWidth / screenHeight;
+  const videoAspect = videoWidth / videoHeight;
 
   const captureCanvas = document.createElement('canvas');
-  captureCanvas.width = width;
-  captureCanvas.height = height;
+  captureCanvas.width = screenWidth;
+  captureCanvas.height = screenHeight;
   const ctx = captureCanvas.getContext('2d');
 
+  let sx, sy, sWidth, sHeight;
+  if (screenAspect > videoAspect) {
+    sWidth = videoWidth;
+    sHeight = videoWidth / screenAspect;
+    sx = 0;
+    sy = (videoHeight - sHeight) / 2;
+  } else {
+    sHeight = videoHeight;
+    sWidth = videoHeight * screenAspect;
+    sy = 0;
+    sx = (videoWidth - sWidth) / 2;
+  }
+
   // videoを画面に表示されているサイズで描画
-  ctx.drawImage(video, 0, 0, width, height);
+  ctx.drawImage(video, sx, sy, sWidth, sHeight, 0, 0, screenWidth, screenHeight);
 
   // WebGL canvasの内容を同じサイズで合成
   renderer.render(scene, camera); // ← これ重要
