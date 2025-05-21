@@ -108,8 +108,23 @@ function capture() {
   ctx.drawImage(video, sx, sy, sWidth, sHeight, 0, 0, screenWidth, screenHeight);
 
   // WebGL canvasの内容を同じサイズで合成
+  const renderWidth = renderer.domElement.width;
+  const renderHeight = renderer.domElement.height;
+  const renderAspect = renderWidth / renderHeight;
+  if (screenAspect > renderAspect) {
+    sWidth = renderWidth;
+    sHeight = renderWidth / screenAspect;
+    sx = 0;
+    sy = (renderHeight - sHeight) / 2;
+  } else {
+    sHeight = renderHeight;
+    sWidth = renderHeight * screenAspect;
+    sy = 0;
+    sx = (renderWidth - sWidth) / 2;
+  }
+
   renderer.render(scene, camera); // ← これ重要
-  ctx.drawImage(renderer.domElement, 0, 0);//, screenWidth, screenHeight);
+  ctx.drawImage(renderer.domElement, sx, sy, sWidth, sHeight, 0, 0, screenWidth, screenHeight);
 
   ctx.fillStyle = "rgba(0,0,0,0.5)";
   ctx.fillRect(10, 10, 300,300);
