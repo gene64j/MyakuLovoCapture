@@ -111,6 +111,18 @@ function capture() {
   renderer.render(scene, camera); // ← これ重要
   ctx.drawImage(renderer.domElement, 0, 0);//, screenWidth, screenHeight);
 
+  ctx.fillStyle = "rgba(0,0,0,0.5)";
+  ctx.fillRect(10, 10, 300,300);
+  ctx.fillStyle = "white";
+  ctx.font = "16px sans-serif";
+  ctx.fillText("canvas: ${canvas.width} x ${canvas.height}", 20, 40);
+  ctx.fillText("video: ${videoWidth} x ${videoHeight}", 20, 70);
+  ctx.fillText("screen: ${screenWidth} x ${screenHeight}", 20, 100);
+  ctx.fillText("aspect: ${screenAspect} x ${videoAspect}", 20, 130); 
+  ctx.fillText("sx: ${sx} sy: ${sy}", 20, 160);
+  ctx.fillText("sWidth: ${sWidth} sHeight: ${sHeight}", 20, 190);
+  ctx.fillText("renderer.domElement: ${renderer.domElement.width} x ${renderer.domElement.height}", 20, 220);
+
   // 保存処理（JPEG）
   const dataURL = captureCanvas.toDataURL('image/jpeg', 0.95);
   snapshot.src = dataURL;
