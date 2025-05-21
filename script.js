@@ -109,7 +109,7 @@ function capture() {
 
   // WebGL canvasの内容を同じサイズで合成
   renderer.render(scene, camera); // ← これ重要
-  ctx.drawImage(renderer.domElement, 0, 0, screenWidth, screenHeight);
+  ctx.drawImage(renderer.domElement, 0, 0);//, screenWidth, screenHeight);
 
   // 保存処理（JPEG）
   const dataURL = captureCanvas.toDataURL('image/jpeg', 0.95);
