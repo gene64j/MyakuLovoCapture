@@ -152,8 +152,8 @@
     });
 
     function resize() {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
       renderer.setSize(width, height, false);
       renderer.setPixelRatio(window.devicePixelRatio);
       camera.aspect = width / height;
