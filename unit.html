@@ -177,24 +177,24 @@
     const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.5);
     scene.add(light);
 
-    const lightSlider = document.getElementById('light-slider');
-    lightSlider.addEventListener('input', () => {
-      light.intensity = parseFloat(lightSlider.value);
-    });
+  const lightSlider = document.getElementById('light-slider');
+  lightSlider.addEventListener('input', () => {
+    light.intensity = parseFloat(lightSlider.value);
+  });
 
     let model;
     const loader = new GLTFLoader();
     loader.load('model.glb', gltf => {
       model = gltf.scene;
       scene.add(model);
-      //model.position.y += 0.5;
       const box = new THREE.Box3().setFromObject(model);
       const center = box.getCenter(new THREE.Vector3());
       const size = box.getSize(new THREE.Vector3()).length();
       camera.position.copy(center.clone().add(new THREE.Vector3(0, 0, size)));
+      // controls.target.y += 0.5;
       controls.target.copy(center);
-      controls.target.y -= 0.7;
       camera.lookAt(controls.target);
+      model.position.y += 0.5;
     }, undefined, err => {
       console.error('モデル読み込みエラー:', err);
     });
