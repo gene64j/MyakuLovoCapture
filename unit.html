@@ -13,7 +13,7 @@
       background: black;
     }
 
-    video, img, #three-canvas {
+    video, img {
       position: absolute;
       top: 0;
       left: 0;
@@ -24,7 +24,12 @@
     }
 
     #three-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
       z-index: 1;
+      width: 100%;
+      height: 100%;
       pointer-events: auto;
     }
 
@@ -146,11 +151,19 @@
       console.error('モデル読み込みエラー:', err);
     });
 
+    // function resize() {
+    //   const width = window.innerWidth;
+    //   const height = window.innerHeight;
+    //   renderer.setSize(width, height);
+    //   renderer.setPixelRatio(window.devicePixelRatio);
+    //   camera.aspect = width / height;
+    //   camera.updateProjectionMatrix();
+    // }
     function resize() {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-      renderer.setSize(width, height);
-      renderer.setPixelRatio(window.devicePixelRatio);
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+
+      renderer.setSize(width, height, false); // falseでcanvasのスタイルを維持
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
     }
