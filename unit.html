@@ -154,7 +154,7 @@
     function resize() {
       const width = window.innerWidth;
       const height = window.innerHeight;
-      renderer.setSize(width, height);
+      renderer.setSize(width, height, false);
       renderer.setPixelRatio(window.devicePixelRatio);
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
