@@ -141,13 +141,14 @@
     loader.load('model.glb', gltf => {
       model = gltf.scene;
       scene.add(model);
+      //model.position.y += 0.5;
       const box = new THREE.Box3().setFromObject(model);
       const center = box.getCenter(new THREE.Vector3());
       const size = box.getSize(new THREE.Vector3()).length();
       camera.position.copy(center.clone().add(new THREE.Vector3(0, 0, size)));
       controls.target.copy(center);
-      controls.target.y -= 0.5;
-      camera.lookAt(center);
+      controls.target.y -= 0.7;
+      camera.lookAt(controls.target);
     }, undefined, err => {
       console.error('モデル読み込みエラー:', err);
     });
