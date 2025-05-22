@@ -151,22 +151,22 @@
       console.error('モデル読み込みエラー:', err);
     });
 
-    // function resize() {
-    //   const width = window.innerWidth;
-    //   const height = window.innerHeight;
-    //   renderer.setSize(width, height);
-    //   renderer.setPixelRatio(window.devicePixelRatio);
-    //   camera.aspect = width / height;
-    //   camera.updateProjectionMatrix();
-    // }
     function resize() {
-      const width = canvas.clientWidth;
-      const height = canvas.clientHeight;
-
-      renderer.setSize(width, height, false); // falseでcanvasのスタイルを維持
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(window.devicePixelRatio);
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
     }
+    // function resize() {
+    //   const width = canvas.clientWidth;
+    //   const height = canvas.clientHeight;
+
+    //   renderer.setSize(width, height, false); // falseでcanvasのスタイルを維持
+    //   camera.aspect = width / height;
+    //   camera.updateProjectionMatrix();
+    // }
     window.addEventListener('resize', resize);
     resize();
 
