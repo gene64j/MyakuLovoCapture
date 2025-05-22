@@ -144,8 +144,9 @@
       const box = new THREE.Box3().setFromObject(model);
       const center = box.getCenter(new THREE.Vector3());
       const size = box.getSize(new THREE.Vector3()).length();
-      camera.position.copy(center.clone().add(new THREE.Vector3(0, 0, size * 1.5)));
+      camera.position.copy(center.clone().add(new THREE.Vector3(0, 0, size)));
       controls.target.copy(center);
+      controls.target.y -= 0.5;
       camera.lookAt(center);
     }, undefined, err => {
       console.error('モデル読み込みエラー:', err);
