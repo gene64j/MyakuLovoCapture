@@ -67,15 +67,21 @@ function resize() {
   renderer.setPixelRatio(window.devicePixelRatio); // 画質向上
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
+  console.log('resize', width, height);
 }
 window.addEventListener('resize', resize);
 resize();
+
+let lastRenderWidth = 0;
+let lastRenderHeight = 0;
 
 // アニメーション
 function animate() {
   requestAnimationFrame(animate);
   controls.update();
   renderer.render(scene, camera);
+  lastRenderWidth = renderer.domElement.width;
+  lastRenderHeight = renderer.domElement.height;
 }
 animate();
 
@@ -136,7 +142,7 @@ function capture() {
   ctx.fillText(`aspect: ${screenAspect} x ${videoAspect}`, 20, 130); 
   ctx.fillText(`sx: ${sx} sy: ${sy}`, 20, 160);
   ctx.fillText(`sWidth: ${sWidth} sHeight: ${sHeight}`, 20, 190);
-  ctx.fillText(`renderer.domElement: ${renderer.domElement.width} x ${renderer.domElement.height}`, 20, 220);
+  ctx.fillText(`last render: ${lastRenderWidth} x ${lastRenderHeight}`, 20, 220);
 
   // 保存処理（JPEG）
   const dataURL = captureCanvas.toDataURL('image/jpeg', 0.95);
