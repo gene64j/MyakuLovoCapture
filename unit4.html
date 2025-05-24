@@ -351,28 +351,6 @@
     });
 
     returnButton.addEventListener('click', resetControls);
-    
-    let prevAngle = null;
-
-    canvas.addEventListener('touchmove', (e) => {
-      if (e.touches.length === 2) {
-        const dx = e.touches[1].clientX - e.touches[0].clientX;
-        const dy = e.touches[1].clientY - e.touches[0].clientY;
-        const angle = Math.atan2(dy, dx);
-
-        if (prevAngle !== null) {
-          const deltaAngle = angle - prevAngle;
-          if (model) {
-            model.rotation.z += deltaAngle;
-          }
-        }
-        prevAngle = angle;
-      }
-    }, false);
-
-    canvas.addEventListener('touchend', () => {
-      prevAngle = null;
-    });
 
     startCamera();
   </script>
